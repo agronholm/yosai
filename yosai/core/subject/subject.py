@@ -1197,10 +1197,11 @@ class Yosai:
     @staticmethod
     @contextmanager
     def set_context(subject):
-        mysubject = copy.copy(subject)
-        global_subject_context.stack.append(weakref.proxy(mysubject, list.remove))
-        yield Yosai.get_current_subject()
-        global_subject_context.stack.pop()
+        global_subject_context.stack.append(subject)
+        try:
+            yield Yosai.get_current_subject()
+        finally:
+            global_subject_context.stack.pop()
 
     @staticmethod
     def get_current_subject():
